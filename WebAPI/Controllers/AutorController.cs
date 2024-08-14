@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Dto.Autor;
 using WebAPI.Models;
 using WebAPI.Services;
 
@@ -63,5 +64,29 @@ public class AutorController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, autor);
         }
+    }
+
+
+    [HttpPost("CriarAutor")]
+    public async Task<ActionResult<ResponseModel<List<AutorModel>>>> CriarAutor(CreateAutorDto autorCriacaoDto)
+    {
+        var autores = await _autorInterface.CriarAutor(autorCriacaoDto);
+        return Ok(autores);
+
+
+    }
+
+    [HttpPut("EditarAutor")]
+    public async Task<ActionResult<ResponseModel<List<AutorModel>>>> EditarAutor(EditAutorDto autorEdicaoDto)
+    {
+        var autores = await _autorInterface.EditarAutor(autorEdicaoDto);
+        return Ok(autores);
+    }
+
+    [HttpDelete("DeletarAutor/{idAutor}")]
+    public async Task<ActionResult<ResponseModel<List<AutorModel>>>> DeletarAutor(int idAutor)
+    {
+        var autores = await _autorInterface.DeletarAutor(idAutor);
+        return Ok(autores);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
+using WebAPI.Dto.Autor;
 using WebAPI.Models;
 
 namespace WebAPI.Services;
@@ -71,6 +72,98 @@ public class AutorService : IAutorInterface
         }
     }
 
+    public async Task<ResponseModel<List<AutorModel>>> CriarAutor(CreateAutorDto autorCriacaoDto)
+    {
+        ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
+
+            try
+            {
+                var autor = new AutorModel
+                {
+                    Name = autorCriacaoDto.Name,
+                    Sobrenome = autorCriacaoDto.Sobrenome
+                };
+
+                _context.Add(autor);
+                await _context.SaveChangesAsync();
+
+                response.Dados = await _context.Autores.ToListAsync();
+                response.Mensagem = "Autor criado com sucesso!";
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Mensagem = "Erro: " + ex.Message;
+                response.Status = false;
+                return response;
+            }
+        
+    }
+
+    public async Task<ResponseModel<List<AutorModel>>> DeletarAutor(int idAutor)
+    {
+        ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
+        try
+        {
+            var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == idAutor);
+
+            if(autor == null)
+            {
+                response.Mensagem = "Autor não encontrado!";
+                response.Status = false;
+                return response;
+            }
+
+            _context.Remove(autor);
+            await _context.SaveChangesAsync();
+
+            response.Dados = await _context.Autores.ToListAsync();
+            response.Mensagem = "Autor deletado com sucesso!";
+            response.Status = true;
+            return response;
+        
+        }
+        catch(Exception ex)
+        {
+            response.Mensagem = "Erro: " + ex.Message;
+            response.Status = false;
+            return response;
+        }
+    }
+
+    public async Task<ResponseModel<List<AutorModel>>> EditarAutor(EditAutorDto autorEdicaoDto)
+    {
+       ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
+        try
+        {
+            var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == autorEdicaoDto.Id);
+
+            if(autor == null)
+            {
+                response.Mensagem = "Autor não encontrado!";
+                response.Status = false;
+                return response;
+            }
+
+            autor.Name = autorEdicaoDto.Name;
+            autor.Sobrenome = autorEdicaoDto.Sobrenome;
+
+            _context.Update(autor);
+            _context.SaveChanges();
+
+            response.Dados = await _context.Autores.ToListAsync();
+            response.Mensagem = "Autor editado com sucesso!";
+            response.Status = true;
+            return response;
+        }
+        catch(Exception ex)
+        {
+            response.Mensagem = "Erro: " + ex.Message;
+            response.Status = false;
+            return response;
+        }
+    }
+
     public async Task<ResponseModel<List<AutorModel>>> ListarAutores()
     {
         ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();   
@@ -94,4 +187,6 @@ public class AutorService : IAutorInterface
             return response;
         }
     }
+
+
 }
