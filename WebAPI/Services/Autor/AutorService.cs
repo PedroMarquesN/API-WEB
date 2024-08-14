@@ -3,7 +3,7 @@ using WebAPI.Data;
 using WebAPI.Dto.Autor;
 using WebAPI.Models;
 
-namespace WebAPI.Services;
+namespace WebAPI.Services.Autor;
 
 public class AutorService : IAutorInterface
 {
@@ -20,24 +20,25 @@ public class AutorService : IAutorInterface
     public async Task<ResponseModel<AutorModel>> BuscarAutorPorId(int idAutor)
     {
         ResponseModel<AutorModel> response = new ResponseModel<AutorModel>();
-        try 
+        try
         {
             var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == idAutor);
 
-            if(autor == null) {
+            if (autor == null)
+            {
 
                 response.Mensagem = "Autor não encontrado!";
                 response.Status = false;
                 return response;
             }
-  
-                response.Dados = autor;
-                response.Mensagem = "Autor encontrado com sucesso!";
-                response.Status = true;
-                return response;
-            
+
+            response.Dados = autor;
+            response.Mensagem = "Autor encontrado com sucesso!";
+            response.Status = true;
+            return response;
+
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Mensagem = "Erro: " + ex.Message;
             response.Status = false;
@@ -48,12 +49,12 @@ public class AutorService : IAutorInterface
     public async Task<ResponseModel<AutorModel>> BuscarAutorPorIdLivro(int idLivro)
     {
         ResponseModel<AutorModel> response = new ResponseModel<AutorModel>();
-        
-        try 
+
+        try
         {
             var livro = await _context.Livros.Include(x => x.Autor).FirstOrDefaultAsync(x => x.Id == idLivro);
 
-            if(livro == null) 
+            if (livro == null)
             {
                 response.Mensagem = "Autor não encontrado!";
                 response.Status = false;
@@ -64,7 +65,7 @@ public class AutorService : IAutorInterface
             response.Status = true;
             return response;
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             response.Mensagem = "Erro: " + ex.Message;
             response.Status = false;
@@ -76,28 +77,28 @@ public class AutorService : IAutorInterface
     {
         ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
 
-            try
+        try
+        {
+            var autor = new AutorModel
             {
-                var autor = new AutorModel
-                {
-                    Name = autorCriacaoDto.Name,
-                    Sobrenome = autorCriacaoDto.Sobrenome
-                };
+                Name = autorCriacaoDto.Name,
+                Sobrenome = autorCriacaoDto.Sobrenome
+            };
 
-                _context.Add(autor);
-                await _context.SaveChangesAsync();
+            _context.Add(autor);
+            await _context.SaveChangesAsync();
 
-                response.Dados = await _context.Autores.ToListAsync();
-                response.Mensagem = "Autor criado com sucesso!";
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Mensagem = "Erro: " + ex.Message;
-                response.Status = false;
-                return response;
-            }
-        
+            response.Dados = await _context.Autores.ToListAsync();
+            response.Mensagem = "Autor criado com sucesso!";
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Mensagem = "Erro: " + ex.Message;
+            response.Status = false;
+            return response;
+        }
+
     }
 
     public async Task<ResponseModel<List<AutorModel>>> DeletarAutor(int idAutor)
@@ -107,7 +108,7 @@ public class AutorService : IAutorInterface
         {
             var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == idAutor);
 
-            if(autor == null)
+            if (autor == null)
             {
                 response.Mensagem = "Autor não encontrado!";
                 response.Status = false;
@@ -121,9 +122,9 @@ public class AutorService : IAutorInterface
             response.Mensagem = "Autor deletado com sucesso!";
             response.Status = true;
             return response;
-        
+
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Mensagem = "Erro: " + ex.Message;
             response.Status = false;
@@ -133,12 +134,12 @@ public class AutorService : IAutorInterface
 
     public async Task<ResponseModel<List<AutorModel>>> EditarAutor(EditAutorDto autorEdicaoDto)
     {
-       ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
+        ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
         try
         {
             var autor = await _context.Autores.FirstOrDefaultAsync(x => x.Id == autorEdicaoDto.Id);
 
-            if(autor == null)
+            if (autor == null)
             {
                 response.Mensagem = "Autor não encontrado!";
                 response.Status = false;
@@ -156,7 +157,7 @@ public class AutorService : IAutorInterface
             response.Status = true;
             return response;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             response.Mensagem = "Erro: " + ex.Message;
             response.Status = false;
@@ -166,7 +167,7 @@ public class AutorService : IAutorInterface
 
     public async Task<ResponseModel<List<AutorModel>>> ListarAutores()
     {
-        ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();   
+        ResponseModel<List<AutorModel>> response = new ResponseModel<List<AutorModel>>();
         try
         {
             var autores = await _context.Autores.ToListAsync();

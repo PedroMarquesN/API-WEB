@@ -1,10 +1,8 @@
-﻿namespace WebAPI.Models;
+﻿namespace WebAPI.Dto.Livro;
 
-public class LivroModel
+public class EditLivroDto
 {
     public int Id { get; set; }
     public string Titulo { get; set; }
     public int AutorId { get; set; }
-
-    public AutorModel Autor { get; set; }
 }

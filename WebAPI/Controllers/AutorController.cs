@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Dto.Autor;
 using WebAPI.Models;
-using WebAPI.Services;
+using WebAPI.Services.Autor;
 
 namespace WebAPI.Controllers;
 [Route("api/[controller]")]
